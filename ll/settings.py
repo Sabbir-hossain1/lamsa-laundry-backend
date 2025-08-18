@@ -27,7 +27,13 @@ SECRET_KEY = "django-insecure-ugv4z#olw3@71a4_@*cd+)(r1we!@j4d205&7tuyuyldr$0n0s
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
+
+# ALLOWED_HOSTS = [
+#     "127.0.0.1",
+#     "localhost",
+#     "192.168.68.130",  # 👈 your LAN IP
+# ]
 
 
 # Application definition
@@ -39,14 +45,17 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "user",
     "rest_framework",
     "drf_spectacular",
+    "corsheaders",
+    "user",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",  # 👈 must be at the top
+    "django.middleware.common.CommonMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -88,6 +97,12 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "ll.wsgi.application"
+CORS_ALLOW_ALL_ORIGINS = True
+
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3000",  # React/Next.js dev
+#     "https://myfrontend.com",  # your deployed frontend
+# ]
 
 
 # Database
