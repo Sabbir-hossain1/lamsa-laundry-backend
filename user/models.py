@@ -98,3 +98,22 @@ class Address(models.Model):
 
     def __str__(self):
         return f"{self.user.phone_number} - {self.city_or_area or 'N/A'}"
+
+
+class Notification(models.Model):
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, related_name="notifications"
+    )
+    title = models.CharField(max_length=255)
+    subtitle = models.CharField(max_length=255, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "Notification"
+        verbose_name_plural = "Notifications"
+
+    def __str__(self):
+        return f"{self.title} → {self.user.phone_number}"
