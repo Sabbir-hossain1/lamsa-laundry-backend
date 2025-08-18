@@ -17,6 +17,7 @@ from user.serializers.auth_serializers import (
 )
 from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import action
+from rest_framework.permissions import AllowAny
 
 
 class CustomUserViewSet(viewsets.ModelViewSet):
@@ -43,6 +44,11 @@ class AuthViewSets(InitialModelViewSet):
         elif self.action == "signup":
             return DefaultSignUpSerializer
         return super().get_serializer_class()
+
+    def get_permissions(self):
+        if self.action in ["login", "signup"]:
+            return [AllowAny()]
+        return super().get_permissions()
 
     @extend_schema(
         request=LoginSerializer,
