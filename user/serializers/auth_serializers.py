@@ -16,7 +16,7 @@ class LoginSerializer(serializers.Serializer):
                 raise Exception("Wrong password!")
         except Exception:
             raise serializers.ValidationError(
-                {"password": "Email or password is incorrect"}
+                {"password": "phone number or password is incorrect"}
             )
         return attrs
 
