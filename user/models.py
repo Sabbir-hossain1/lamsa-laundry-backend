@@ -8,6 +8,7 @@ from django.utils import timezone
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from common_bases.base_model import BaseModel
 
 
 class CustomUserManager(BaseUserManager):
@@ -76,3 +77,24 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
         Profile.objects.create(user=instance)
     else:
         instance.profile.save()
+
+
+class Address(models.Model):
+    user = models.OneToOneField(
+        CustomUser, related_name="address", on_delete=models.CASCADE
+    )
+    emirate = models.CharField(max_length=50, blank=True, null=True)
+    city_or_area = models.CharField(max_length=100, blank=True, null=True)
+    street_or_road = models.CharField(max_length=150, blank=True, null=True)
+    building_name = models.CharField(max_length=150, blank=True, null=True)
+    apartment_no = models.CharField(max_length=20, blank=True, null=True)
+    post_box = models.CharField(max_length=20, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Address"
+        verbose_name_plural = "Addresses"
+
+    def __str__(self):
+        return f"{self.user.phone_number} - {self.city_or_area or 'N/A'}"
