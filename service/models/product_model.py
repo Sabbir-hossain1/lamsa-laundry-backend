@@ -4,7 +4,7 @@ from django.db import models
 
 class Product(BaseModel):
     name = models.CharField(max_length=255)
-    image = models.ImageField(upload_to="products/", blank=True, null=True)
+    image = models.ImageField(upload_to="assests/products/", blank=True, null=True)
 
     class Meta:
         verbose_name = "Product"
