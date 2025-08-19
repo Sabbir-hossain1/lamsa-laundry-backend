@@ -1,19 +1,23 @@
 from common_bases.base_model import BaseModel
 from django.db import models
-from order.models.order_model import Order
-from service.models.service_model import Service
-from service.models.product_model import Product
 
 
 class OrderItem(BaseModel):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
+    order = models.ForeignKey(
+        "order.Order", on_delete=models.CASCADE, related_name="items"
+    )
     service = models.ForeignKey(
-        Service, on_delete=models.CASCADE, related_name="order_items"
+        "service.Service", on_delete=models.CASCADE, related_name="order_items"
     )
     product = models.ForeignKey(
-        Product, on_delete=models.CASCADE, related_name="order_items"
+        "service.Product", on_delete=models.CASCADE, related_name="order_items"
     )
     quantity = models.PositiveIntegerField(default=1)
+    unit_price = models.DecimalField(
+        max_digits=10, decimal_places=2, blank=True, null=True
+    )
+    total = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
