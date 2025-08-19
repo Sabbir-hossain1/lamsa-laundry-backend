@@ -1,10 +1,13 @@
 from rest_framework import viewsets, permissions
 from order.models.order_model import Order
 from order.serializers.order_model_serializers import (
+    OrderCreateSerializer,
     OrderListSerializer,
     OrderDetailSerializer,
-    OrderCreateUpdateSerializer,
+    OrderUpdateSerializer,
 )
+from rest_framework.response import Response
+from rest_framework import status
 
 
 class OrderViewSet(viewsets.ModelViewSet):
@@ -50,4 +53,28 @@ class OrderViewSet(viewsets.ModelViewSet):
             return OrderListSerializer
         elif self.action == "retrieve":
             return OrderDetailSerializer
-        return OrderCreateUpdateSerializer
+        elif self.action == "create":
+            return OrderCreateSerializer
+        elif self.action in ["update", "partial_update"]:
+            return OrderUpdateSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = OrderCreateSerializer(
+            data=request.data, context={"request": request}
+        )
+        serializer.is_valid(raise_exception=True)
+        try:
+            order = serializer.save()
+            return Response(
+                {
+                    "message": "Order has been placed successfully.",
+                    "order_id": serializer.instance.id,
+                },
+                status=status.HTTP_201_CREATED,
+            )
+        except Exception as e:
+            print("Error creating order:", e)
+            return Response(
+                {"detail": "An error occurred while creating the order."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
