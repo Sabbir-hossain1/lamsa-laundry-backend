@@ -10,9 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
-from pathlib import Path
 from datetime import timedelta
-
+from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -112,12 +111,23 @@ CORS_ALLOW_ALL_ORIGINS = True
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.mysql",
+#         "NAME": "lamsa-laundry",
+#         "USER": "root",
+#         "PASSWORD": "chisty",
+#         "host": "localhost",
+#         "port": "3306",
+#     }
+# }
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": "lamsa-laundry",
+        "NAME": "ll_database",
         "USER": "root",
-        "PASSWORD": "chisty",
+        "PASSWORD": "9a8s2Laundry#7763",
         "host": "localhost",
         "port": "3306",
     }
