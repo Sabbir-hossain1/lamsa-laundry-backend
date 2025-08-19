@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from order.models.order_model import Order
+from django.db import transaction
 
 
 class OrderListSerializer(serializers.ModelSerializer):
@@ -42,18 +43,35 @@ class OrderDetailSerializer(serializers.ModelSerializer):
         ]
 
 
-class OrderCreateUpdateSerializer(serializers.ModelSerializer):
-    """Serializer for creating & updating orders."""
+class OrderUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = [
-            "user",
-            "total_amount",
-            "discount_amount",
-            "final_amount",
-            "status",
-            "payment_status",
-            "payment_method",
-            "notes",
-        ]
+        fields = "__all__"
+
+
+class OrderCreateSerializer(serializers.Serializer):
+    """Serializer for creating & updating orders."""
+
+    def validate(self, data):
+        user = self.context["request"].user
+        if not user:
+            raise serializers.ValidationError("User are required")
+        return data
+
+    def create(self, validated_data):
+        user = self.context["request"].user
+        with transaction.atomic():
+            try:
+                order = Order.create_order(
+                    products=validated_data.get("products", []),
+                    user=user,
+                    notes=validated_data.get("notes", ""),
+                    discount=0,
+                    payment_method="CASH",
+                )
+
+            except Exception as e:
+                print("Error in creating order", e)
+                raise serializers.ValidationError("Failed to create order")
+            return order
