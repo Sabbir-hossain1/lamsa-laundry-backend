@@ -115,9 +115,9 @@ CORS_ALLOW_ALL_ORIGINS = True
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": "ll_database",
+        "NAME": "lamsa-laundry",
         "USER": "root",
-        "PASSWORD": "9a8s2Laundry#7763",
+        "PASSWORD": "chisty",
         "host": "localhost",
         "port": "3306",
     }

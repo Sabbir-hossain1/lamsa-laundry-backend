@@ -1,23 +1,23 @@
-from rest_framework import viewsets
-from rest_framework.response import Response
-from user.services.auth_viewset_services import login_user
-
-from user.models import CustomUser
-from user.serializers.user_model_serializers import (
-    CustomUserListSerializer,
-    CustomUserDetailSerializer,
-    CustomUserCreateSerializer,
-    CustomUserUpdateSerializer,
-)
-from user.utils.initialModelVieset import InitialModelViewSet
-from user.serializers.auth_serializers import (
-    LoginResponseSerializer,
-    LoginSerializer,
-    DefaultSignUpSerializer,
-)
 from drf_spectacular.utils import extend_schema
+from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+
+from user.models import CustomUser
+from user.serializers.auth_serializers import (
+    DefaultSignUpSerializer,
+    LoginResponseSerializer,
+    LoginSerializer,
+)
+from user.serializers.user_model_serializers import (
+    CustomUserCreateSerializer,
+    CustomUserDetailSerializer,
+    CustomUserListSerializer,
+    CustomUserUpdateSerializer,
+)
+from user.services.auth_viewset_services import login_user
+from user.utils.initialModelVieset import InitialModelViewSet
 
 
 class CustomUserViewSet(viewsets.ModelViewSet):
@@ -57,6 +57,7 @@ class AuthViewSets(InitialModelViewSet):
         },
         operation_id="login",
         tags=["Authentication"],
+        description="Login to the system using phone number and password",
     )
     @action(detail=False, methods=["POST"], name="Login", url_path="login")
     def login(self, request):
@@ -72,6 +73,7 @@ class AuthViewSets(InitialModelViewSet):
         },
         operation_id="signup",
         tags=["Authentication"],
+        description="Sign up for a new account using phone number and password",
     )
     @action(detail=False, methods=["POST"], name="SignUp", url_path="signup")
     def signup(self, request):
