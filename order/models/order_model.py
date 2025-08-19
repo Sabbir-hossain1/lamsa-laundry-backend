@@ -39,11 +39,9 @@ class Order(BaseModel):
         max_length=20, choices=PaymentMethod.choices, default=PaymentMethod.CASH
     )
     notes = models.TextField(blank=True, null=True)
-    order_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ["-order_at"]
+        ordering = ["-created_at"]
         verbose_name = "Order"
         verbose_name_plural = "Orders"
 
