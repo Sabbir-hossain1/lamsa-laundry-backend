@@ -5,13 +5,7 @@ from django.db import models
 class OrderItem(BaseModel):
     order = models.ForeignKey(
         "order.Order", on_delete=models.CASCADE, related_name="items"
-    )
-    service = models.ForeignKey(
-        "service.Service", on_delete=models.CASCADE, related_name="order_items"
-    )
-    product = models.ForeignKey(
-        "service.Product", on_delete=models.CASCADE, related_name="order_items"
-    )
+    )    
     price = models.ForeignKey(
         "service.Price",
         related_name="order_items",
