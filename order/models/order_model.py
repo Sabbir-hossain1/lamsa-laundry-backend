@@ -130,6 +130,7 @@ class Order(BaseModel):
             order=order,
             service=service,
             product=product,
+            price=price,
             quantity=quantity,
             unit_price=price.sell_price,
             total=total,
