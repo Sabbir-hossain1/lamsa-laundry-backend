@@ -123,13 +123,9 @@ class Order(BaseModel):
         quantity = product_data.get("quantity", 1)
         price = Price.objects.get(id=product_data["price"])
         total = quantity * price.sell_price
-        service = Service.objects.get(id=product_data["service"])
-        product = Product.objects.get(id=product_data["product"])
 
         return OrderItem.objects.create(
             order=order,
-            service=service,
-            product=product,
             price=price,
             quantity=quantity,
             unit_price=price.sell_price,
