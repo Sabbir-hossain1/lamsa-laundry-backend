@@ -12,6 +12,13 @@ class OrderItem(BaseModel):
     product = models.ForeignKey(
         "service.Product", on_delete=models.CASCADE, related_name="order_items"
     )
+    price = models.ForeignKey(
+        "service.Price",
+        related_name="order_items",
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+    )
     quantity = models.PositiveIntegerField(default=1)
     unit_price = models.DecimalField(
         max_digits=10, decimal_places=2, blank=True, null=True
