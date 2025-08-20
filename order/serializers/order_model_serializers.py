@@ -53,6 +53,10 @@ class OrderUpdateSerializer(serializers.ModelSerializer):
 class OrderCreateSerializer(serializers.Serializer):
     """Serializer for creating & updating orders."""
 
+    products = serializers.ListField(child=serializers.DictField(), required=True)
+    schedule = serializers.DictField(required=True)
+    notes = serializers.CharField(required=False, allow_blank=True)
+
     def validate(self, data):
         user = self.context["request"].user
         if not user:
@@ -61,17 +65,16 @@ class OrderCreateSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         user = self.context["request"].user
-        with transaction.atomic():
-            try:
-                order = Order.create_order(
-                    products=validated_data.get("products", []),
-                    user=user,
-                    notes=validated_data.get("notes", ""),
-                    discount=0,
-                    payment_method="CASH",
-                )
-
-            except Exception as e:
-                print("Error in creating order", e)
-                raise serializers.ValidationError("Failed to create order")
+        try:
+            order = Order.create_order(
+                user=user,
+                products=validated_data.get("products", []),
+                schedule=validated_data.get("schedule", {}),
+                notes=validated_data.get("notes", ""),
+                discount=0,
+                payment_method="CASH",
+            )
             return order
+        except Exception as e:
+            print("Error in creating order", e)
+            raise serializers.ValidationError("Failed to create order")
