@@ -8,6 +8,8 @@ import uuid
 from django.db import transaction
 from order.models.order_item_model import OrderItem
 from order.models.schedule_model import Schedule
+from rest_framework.response import Response
+from rest_framework import status
 
 
 class Order(BaseModel):
@@ -32,9 +34,13 @@ class Order(BaseModel):
         CustomUser, on_delete=models.CASCADE, related_name="orders"
     )
     purchase_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    total_amount = models.DecimalField(
+        max_digits=10, decimal_places=2, blank=True, null=True
+    )
     discount_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    final_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    final_amount = models.DecimalField(
+        max_digits=10, decimal_places=2, blank=True, null=True
+    )
     status = models.CharField(
         max_length=20, choices=OrderStatus.choices, default=OrderStatus.PENDING
     )
@@ -55,7 +61,6 @@ class Order(BaseModel):
         return f"Order {self.purchase_id} - {self.user.phone_number}"
 
     @staticmethod
-    @transaction.atomic
     def create_order(
         products, schedule, user, notes="", discount=0, payment_method="CASH"
     ):
@@ -64,7 +69,8 @@ class Order(BaseModel):
         [
             {"service": id, "product": id, "quantity": 2, "price": id},
             {"service": id, "product": id, "quantity": 1, "price": id},
-        ]
+        ],
+        schedule:{"pickup_date":"2025-08-22","pickup_time":"10:00","delivery_date":"2025-08-25","delivery_time":"23:00"}
         """
         order = Order.objects.create(
             user=user,
@@ -75,15 +81,24 @@ class Order(BaseModel):
         )
 
         # create scheudle for the order
-        schedule = Schedule.objects.create(
-            order=order,
-            pickup_date=schedule["pickup_date"],
-            pickup_time=schedule["pickup_time"],
-            deliver_date=schedule["deliver_date"],
-            deliver_time=schedule["delivery_time"],
-            proposed_by="provider" if user.is_admin else "client",
-            status="pending",
-        )
+        try:
+            schedule = Schedule.objects.create(
+                order=order,
+                pickup_date=schedule["pickup_date"],
+                pickup_time=schedule["pickup_time"],
+                delivery_date=schedule["delivery_date"],
+                delivery_time=schedule["delivery_time"],
+                proposed_by="provider" if user.is_admin else "client",
+                status="pending",
+            )
+        except Exception as e:
+            print("exception: ", e)
+            return Response(
+                {
+                    "message": str(e),
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         total_amount = 0
 
@@ -118,16 +133,4 @@ class Order(BaseModel):
             quantity=quantity,
             unit_price=price.sell_price,
             total=total,
-        )
-
-    @staticmethod
-    def create_schedule(
-        order, pickup_date=None, picku_time=None, delivery_date=None, delivery_time=None
-    ):
-        return Schedule.objects.create(
-            order=order,
-            pickup_date=pickup_date,
-            picku_time=picku_time,
-            delivery_date=delivery_date,
-            delivery_time=delivery_time,
         )
