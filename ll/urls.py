@@ -40,9 +40,3 @@ urlpatterns = [
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-
-# Customization `header`, `site-title`, and `index`
-admin.site.site_header = "SOS e-Learning App"
-admin.site.site_title = "Softmax online school"
-admin.site.index_title = "Welcome to Softmax online school"
