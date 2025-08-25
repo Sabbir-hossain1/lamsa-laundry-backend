@@ -22,6 +22,8 @@ from drf_spectacular.views import (
     SpectacularSwaggerView,
     SpectacularRedocView,
 )
+from ll import settings
+from django.conf.urls.static import static
 
 
 urlpatterns = [
@@ -37,3 +39,11 @@ urlpatterns = [
         name="swagger-ui",
     ),
 ]
+
+# Serve media files during development and production
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+else:
+    # For production, still add media URLs (static files handled by web server)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
