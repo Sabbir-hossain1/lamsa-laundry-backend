@@ -18,10 +18,11 @@ class ProductDropdownSerializer(serializers.ModelSerializer):
 
     label = serializers.CharField(source="name")
     value = serializers.IntegerField(source="id")
+    image = serializers.ImageField()
 
     class Meta:
         model = Product
-        fields = ["label", "value"]
+        fields = ["label", "value", "image"]
 
 
 class PriceListSerializer(serializers.ModelSerializer):
