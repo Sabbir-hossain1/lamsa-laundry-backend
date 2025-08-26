@@ -2,6 +2,7 @@ from rest_framework import viewsets, permissions
 from service.models.service_model import Service
 from service.serializers.service_model_serializers import (
     ServiceListSerializer,
+    AdminServiceDetailSerializer,
     ServiceDetailSerializer,
     ServiceCreateUpdateSerializer,
 )
@@ -32,8 +33,11 @@ class ServiceViewSet(viewsets.ModelViewSet):
         """
         Use different serializer depending on action.
         """
+        admin_site = self.request.query_params.get("admin_site")
         if self.action == "list":
             return ServiceListSerializer
         elif self.action == "retrieve":
+            if admin_site:
+                return AdminServiceDetailSerializer
             return ServiceDetailSerializer
         return ServiceCreateUpdateSerializer
