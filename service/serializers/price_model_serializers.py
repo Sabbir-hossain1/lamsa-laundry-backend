@@ -17,11 +17,21 @@ class ServiceDropdownSerializer(serializers.ModelSerializer):
 class ProductDropdownSerializer(serializers.ModelSerializer):
     label = serializers.CharField(source="name", read_only=True)
     value = serializers.IntegerField(source="id", read_only=True)
-    image = serializers.ImageField(use_url=True, read_only=True)
+    image = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
         fields = ["label", "value", "image"]
+
+    def get_image(self, obj):
+        """Return absolute URL for image."""
+        if obj.image:
+            request = self.context.get("request")
+            if request:
+                return request.build_absolute_uri(obj.image.url)
+            # Fallback for when request is not available
+            return f"http://ll.softmaxshop.com{obj.image.url}"
+        return None
 
 
 class PriceListSerializer(serializers.ModelSerializer):
