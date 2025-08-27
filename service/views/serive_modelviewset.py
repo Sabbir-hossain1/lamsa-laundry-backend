@@ -11,6 +11,12 @@ from service.serializers.service_model_serializers import (
 class ServiceViewSet(viewsets.ModelViewSet):
     queryset = Service.objects.all()
 
+    def get_serializer_context(self):
+        """Pass request to serializer context."""
+        context = super().get_serializer_context()
+        context["request"] = self.request
+        return context
+
     def get_queryset(self):
         """
         Customize queryset based on action.
