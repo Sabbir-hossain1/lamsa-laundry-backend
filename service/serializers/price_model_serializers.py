@@ -17,11 +17,11 @@ class ServiceDropdownSerializer(serializers.ModelSerializer):
 class ProductDropdownSerializer(serializers.ModelSerializer):
     label = serializers.CharField(source="name", read_only=True)
     value = serializers.IntegerField(source="id", read_only=True)
-    image = serializers.ImageField(use_url=True, read_only=True)
+    # image = serializers.ImageField(use_url=True, read_only=True)
 
     class Meta:
         model = Product
-        fields = ["label", "value", "image"]
+        fields = ["label", "value"]
 
 
 class PriceListSerializer(serializers.ModelSerializer):

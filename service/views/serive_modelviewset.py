@@ -1,10 +1,12 @@
-from rest_framework import viewsets, permissions
+from rest_framework import permissions, viewsets
+
 from service.models.service_model import Service
 from service.serializers.service_model_serializers import (
-    ServiceListSerializer,
     AdminServiceDetailSerializer,
-    ServiceDetailSerializer,
     ServiceCreateUpdateSerializer,
+    ServiceDetailSerializer,
+    ServiceDropdownSerializer,
+    ServiceListSerializer,
 )
 
 
@@ -35,6 +37,8 @@ class ServiceViewSet(viewsets.ModelViewSet):
         """
         admin_site = self.request.query_params.get("admin_site")
         if self.action == "list":
+            if self.request.query_params.get("dropdown", None):
+                return ServiceDropdownSerializer
             return ServiceListSerializer
         elif self.action == "retrieve":
             if admin_site:
