@@ -38,8 +38,8 @@ class PriceListSerializer(serializers.ModelSerializer):
 class PriceDetailSerializer(serializers.ModelSerializer):
     """For retrieving full price details."""
 
-    service = serializers.StringRelatedField()
-    product = serializers.StringRelatedField()
+    service = ServiceDropdownSerializer()
+    product = ProductDropdownSerializer()
 
     class Meta:
         model = Price
