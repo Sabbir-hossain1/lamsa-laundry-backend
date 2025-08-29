@@ -17,11 +17,12 @@ class ServiceDropdownSerializer(serializers.ModelSerializer):
 class ProductDropdownSerializer(serializers.ModelSerializer):
     label = serializers.CharField(source="name", read_only=True)
     value = serializers.IntegerField(source="id", read_only=True)
-    image = serializers.SerializerMethodField()
+    # image = serializers.ImageField(use_url=True, read_only=True)
+
 
     class Meta:
         model = Product
-        fields = ["label", "value", "image"]
+        fields = ["label", "value"]
 
     def get_image(self, obj):
         """Return absolute URL for image."""
@@ -48,8 +49,8 @@ class PriceListSerializer(serializers.ModelSerializer):
 class PriceDetailSerializer(serializers.ModelSerializer):
     """For retrieving full price details."""
 
-    service = serializers.StringRelatedField()
-    product = serializers.StringRelatedField()
+    service = ServiceDropdownSerializer()
+    product = ProductDropdownSerializer()
 
     class Meta:
         model = Price

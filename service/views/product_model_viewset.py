@@ -1,5 +1,7 @@
 from rest_framework import viewsets, permissions
 from service.models.product_model import Product
+
+from service.serializers.price_model_serializers import ProductDropdownSerializer
 from service.serializers.product_model_serializers import (
     ProductListSerializer,
     ProductDetailSerializer,
@@ -33,6 +35,8 @@ class ProductViewSet(viewsets.ModelViewSet):
         Use different serializer depending on action.
         """
         if self.action == "list":
+            if self.request.query_params.get("dropdown", None):
+                return ProductDropdownSerializer
             return ProductListSerializer
         elif self.action == "retrieve":
             return ProductDetailSerializer
