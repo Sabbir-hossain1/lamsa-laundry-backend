@@ -30,7 +30,7 @@ class ServiceDetailSerializer(serializers.ModelSerializer):
 
     def get_products(self, obj):
         prices = obj.prices
-        serializer = PriceListSerializer(prices, many=True)
+        serializer = PriceListSerializer(prices, many=True, context=self.context)
         return serializer.data
 
 
