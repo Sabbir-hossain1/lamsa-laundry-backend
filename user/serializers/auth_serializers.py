@@ -21,6 +21,26 @@ class LoginSerializer(serializers.Serializer):
         return attrs
 
 
+class AdminLoginSerializer(serializers.Serializer):
+    phone_number = serializers.CharField()
+    password = serializers.CharField()
+
+    def validate(self, attrs):
+        try:
+            user = CustomUser.objects.get(
+                phone_number__iexact=attrs["phone_number"],
+                is_active=True,
+                is_staff=True,
+            )
+            if not user.check_password(attrs["password"]):
+                raise Exception("Wrong password!")
+        except Exception as e:
+            raise serializers.ValidationError(
+                {"error": "No admin user found with this phone number"}
+            )
+        return attrs
+
+
 class LoginResponseSerializer(serializers.Serializer):
     refresh = serializers.CharField()
     access = serializers.CharField()
