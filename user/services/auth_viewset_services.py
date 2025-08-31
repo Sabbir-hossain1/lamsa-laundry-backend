@@ -12,5 +12,8 @@ def login_user(phone_number):
         "user": {
             "id": user.id,
             "phone_number": user.phone_number,
+            "is_staff": user.is_staff,
+            "is_active": user.is_active,
+            "is_superuser": user.is_superuser,
         },
     }
