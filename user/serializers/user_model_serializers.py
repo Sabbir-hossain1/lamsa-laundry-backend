@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from user.models import CustomUser
+from django.db import models
 
 
 # Base serializer (common fields)
@@ -18,8 +19,19 @@ class CustomUserBaseSerializer(serializers.ModelSerializer):
 
 # List serializer
 class CustomUserListSerializer(CustomUserBaseSerializer):
+    name = serializers.SerializerMethodField()
+
     class Meta(CustomUserBaseSerializer.Meta):
-        fields = ["id", "phone_number", "is_active", "created_at"]
+        fields = ["id", "phone_number", "name", "is_active", "created_at"]
+
+    def get_name(self, obj):
+        profile = getattr(obj, "profile", None)
+        if profile:
+            first_name = getattr(profile, "first_name", "") or ""
+            last_name = getattr(profile, "last_name", "") or ""
+            full_name = f"{first_name} {last_name}".strip()
+            return full_name
+        return ""
 
 
 # Detail serializer
