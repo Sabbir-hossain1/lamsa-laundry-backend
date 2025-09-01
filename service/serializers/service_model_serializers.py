@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from service.models.service_model import Service
-from service.serializers.price_model_serializers import PriceListSerializer
+from service.serializers.price_model_serializers import (
+    PriceListSerializerForServiceDeatils,
+)
 
 
 class ServiceListSerializer(serializers.ModelSerializer):
@@ -30,7 +32,9 @@ class ServiceDetailSerializer(serializers.ModelSerializer):
 
     def get_products(self, obj):
         prices = obj.prices
-        serializer = PriceListSerializer(prices, many=True, context=self.context)
+        serializer = PriceListSerializerForServiceDeatils(
+            prices, many=True, context=self.context
+        )
         return serializer.data
 
 

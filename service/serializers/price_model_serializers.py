@@ -37,6 +37,17 @@ class ProductDropdownSerializer(serializers.ModelSerializer):
 class PriceListSerializer(serializers.ModelSerializer):
     """For listing prices (lightweight)."""
 
+    service = ServiceDropdownSerializer()
+    product = ProductDropdownSerializer()
+
+    class Meta:
+        model = Price
+        fields = ["id", "service", "product", "sell_price"]
+
+
+class PriceListSerializerForServiceDeatils(serializers.ModelSerializer):
+    """For listing prices (lightweight)."""
+
     services = serializers.SerializerMethodField()
     product = ProductDropdownSerializer()
 
