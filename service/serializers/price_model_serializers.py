@@ -30,7 +30,7 @@ class ProductDropdownSerializer(serializers.ModelSerializer):
             if request:
                 return request.build_absolute_uri(obj.image.url)
             # Fallback for when request is not available
-            return f"http://ll.softmaxshop.com{obj.image.url}"
+            return f"http://ll.softmaxshop.com/{obj.image.url}"
         return None
 
 
