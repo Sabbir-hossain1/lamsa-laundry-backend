@@ -37,12 +37,30 @@ class ProductDropdownSerializer(serializers.ModelSerializer):
 class PriceListSerializer(serializers.ModelSerializer):
     """For listing prices (lightweight)."""
 
-    service = ServiceDropdownSerializer()
+    services = serializers.SerializerMethodField()
     product = ProductDropdownSerializer()
 
     class Meta:
         model = Price
-        fields = ["id", "service", "product", "sell_price"]
+        fields = [
+            "services",
+            "product",
+        ]
+
+    def get_services(self, obj):
+        product_services = []
+        product_services_objects = Price.objects.filter(product=obj.product)
+
+        for product_service in product_services_objects:
+            product_services.append(
+                {
+                    "service_id": product_service.service.id,
+                    "service_title": product_service.service.title,
+                    "price_id": product_service.id,
+                    "sell_price": product_service.sell_price,
+                }
+            )
+        return product_services
 
 
 class PriceDetailSerializer(serializers.ModelSerializer):
