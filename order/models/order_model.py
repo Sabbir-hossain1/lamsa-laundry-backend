@@ -67,8 +67,8 @@ class Order(BaseModel):
         """
         products: list of dicts like
         [
-            {"service": id, "product": id, "quantity": 2, "price": id},
-            {"service": id, "product": id, "quantity": 1, "price": id},
+            {"quantity": 2, "price": id},
+            {"quantity": 1, "price": id},
         ],
         schedule:{"pickup_date":"2025-08-22","pickup_time":"10:00","delivery_date":"2025-08-25","delivery_time":"23:00"}
         """
