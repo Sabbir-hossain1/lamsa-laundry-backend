@@ -10,7 +10,7 @@ class ServiceListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Service
-        fields = ["id", "title", "primary_image"]
+        fields = ["id", "title", "primary_image", "secondary_image"]  # Added secondary_image here
 
 
 class AdminServiceDetailSerializer(serializers.ModelSerializer):
