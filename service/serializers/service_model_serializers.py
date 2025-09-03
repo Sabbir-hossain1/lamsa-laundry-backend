@@ -1,4 +1,5 @@
 from rest_framework import serializers
+
 from service.models.service_model import Service
 from service.serializers.price_model_serializers import PriceListSerializer
 
@@ -8,7 +9,7 @@ class ServiceListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Service
-        fields = ["id", "title", "primary_image"]
+        fields = ["id", "title", "primary_image", "secondary_image"]
 
 
 class AdminServiceDetailSerializer(serializers.ModelSerializer):
