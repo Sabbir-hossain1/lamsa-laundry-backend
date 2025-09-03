@@ -32,7 +32,7 @@ class PriceListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Price
-        fields = ["id", "service", "product", "sell_price"]
+        fields = ["id", "service", "product", "sell_price", "created_at", "updated_at"]
 
 
 class PriceDetailSerializer(serializers.ModelSerializer):
