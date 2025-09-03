@@ -27,7 +27,7 @@ class ServiceDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Service
-        fields = ["id", "title", "secondary_image", "products"]
+        fields = ["id", "title", "primary_image", "secondary_image", "products"]
 
     def get_products(self, obj):
         prices = obj.prices
