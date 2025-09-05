@@ -1,14 +1,17 @@
-from rest_framework import viewsets, permissions
+from rest_framework import permissions, viewsets
+
 from service.models.price_model import Price
 from service.serializers.price_model_serializers import (
-    PriceListSerializer,
-    PriceDetailSerializer,
+    AdminPriceDetailSerializer,
     PriceCreateUpdateSerializer,
+    PriceDetailSerializer,
+    PriceListSerializer,
 )
 
 
 class PriceViewSet(viewsets.ModelViewSet):
     queryset = Price.objects.all()
+    serializer_class = PriceListSerializer
 
     def get_queryset(self):
         """
@@ -37,10 +40,16 @@ class PriceViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         """
-        Use different serializer depending on action.
+        Use different serializer depending on action and query params.
         """
+        admin_site = self.request.query_params.get("admin_site")
+
         if self.action == "list":
             return PriceListSerializer
         elif self.action == "retrieve":
+            if admin_site in ["true", "1", "yes"]:
+                return AdminPriceDetailSerializer
             return PriceDetailSerializer
-        return PriceCreateUpdateSerializer
+        elif self.action in ["create", "update", "partial_update"]:
+            return PriceCreateUpdateSerializer
+        return super().get_serializer_class()

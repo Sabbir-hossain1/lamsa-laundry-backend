@@ -1,6 +1,7 @@
 from rest_framework import viewsets, permissions
 from service.models.service_model import Service
 from service.serializers.service_model_serializers import (
+    ServiceDropdownSerializer,
     ServiceListSerializer,
     AdminServiceDetailSerializer,
     ServiceDetailSerializer,
@@ -40,7 +41,11 @@ class ServiceViewSet(viewsets.ModelViewSet):
         Use different serializer depending on action.
         """
         admin_site = self.request.query_params.get("admin_site")
+        dropdown = self.request.query_params.get("dropdown")
+                
         if self.action == "list":
+            if dropdown in ["true", "1", "yes"]:
+                return ServiceDropdownSerializer
             return ServiceListSerializer
         elif self.action == "retrieve":
             if admin_site:
