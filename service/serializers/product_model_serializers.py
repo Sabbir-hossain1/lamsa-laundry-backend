@@ -24,3 +24,13 @@ class ProductCreateUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ["name", "image"]
+
+
+class ProductDropdownSerializer(serializers.ModelSerializer):
+
+    label = serializers.CharField(source="name")
+    value = serializers.IntegerField(source="id")
+
+    class Meta:
+        model = Product
+        fields = ["label", "value"]
