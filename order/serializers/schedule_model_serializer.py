@@ -6,4 +6,10 @@ class ScheduleModelSerializer(ModelSerializer):
     class Meta:
         model = Schedule
         fields = "__all__"
-        read_only_fields = ["id", "created_at", "updated_at"]
+        read_only_fields = ["id", "created_at", "updated_at", "order"]
+
+
+class ScheduleModelCreateSerializer(ModelSerializer):
+    class Meta:
+        model = Schedule
+        fields = "__all__"        
