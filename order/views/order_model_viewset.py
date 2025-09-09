@@ -28,14 +28,17 @@ class OrderViewSet(viewsets.ModelViewSet):
         if not self.request.user.is_staff:
             qs = qs.filter(user=self.request.user)
 
-        # Optional filtering by query params
-        status = self.request.query_params.get("status")
+
+        status = self.request.query_params.get("order_status")
+        payment_method = self.request.query_params.get("payment_method")
         payment_status = self.request.query_params.get("payment_status")
 
         if status:
             qs = qs.filter(status=status)
         if payment_status:
             qs = qs.filter(payment_status=payment_status)
+        if payment_method:
+            qs = qs.filter(payment_method=payment_method)
 
         return qs.order_by("-created_at")
 

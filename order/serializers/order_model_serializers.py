@@ -1,6 +1,7 @@
-from rest_framework import serializers
-from order.models.order_model import Order
 from django.db import transaction
+from rest_framework import serializers
+
+from order.models.order_model import Order
 
 
 class OrderListSerializer(serializers.ModelSerializer):
@@ -17,6 +18,9 @@ class OrderListSerializer(serializers.ModelSerializer):
             "final_amount",
             "status",
             "payment_status",
+            "payment_method",
+            "created_at",
+            "updated_at",
         ]
 
 
