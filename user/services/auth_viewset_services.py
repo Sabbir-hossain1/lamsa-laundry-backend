@@ -4,6 +4,10 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 def login_user(phone_number):
     user = CustomUser.objects.get(phone_number__iexact=phone_number)
+    profile = getattr(user, "profile", None)
+    name = ""
+    if profile:
+        name = getattr(profile, "first_name", "")
     refresh = RefreshToken.for_user(user)
 
     return {
@@ -12,6 +16,7 @@ def login_user(phone_number):
         "user": {
             "id": user.id,
             "phone_number": user.phone_number,
+            "name": name,
             "is_staff": user.is_staff,
             "is_active": user.is_active,
             "is_superuser": user.is_superuser,

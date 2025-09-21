@@ -1,8 +1,9 @@
 from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny, IsAdminUser
+from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
+from rest_framework import status
 
 from user.models import CustomUser
 from user.serializers.auth_serializers import (
@@ -16,6 +17,7 @@ from user.serializers.user_model_serializers import (
     CustomUserDetailSerializer,
     CustomUserListSerializer,
     CustomUserUpdateSerializer,
+    UserProfileSerializer,
 )
 from user.services.auth_viewset_services import login_user
 from user.utils.initialModelVieset import InitialModelViewSet
@@ -23,6 +25,20 @@ from user.utils.initialModelVieset import InitialModelViewSet
 
 class CustomUserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
+
+    def get_permissions(self):
+        if self.action in [
+            "create",
+            "list",
+            "retrieve",
+            "update",
+            "partial_update",
+            "destroy",
+        ]:
+            return [IsAdminUser()]
+        elif self.action in ["me"]:
+            return [IsAuthenticated()]
+        return super().get_permissions()
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -33,7 +49,28 @@ class CustomUserViewSet(viewsets.ModelViewSet):
             return CustomUserCreateSerializer
         elif self.action in ["update", "partial_update"]:
             return CustomUserUpdateSerializer
+        elif self.action == "me":
+            return UserProfileSerializer
         return CustomUserDetailSerializer
+
+    @action(detail=False, methods=["GET"], name="me", url_path="me")
+    def me(self, request):
+        # if not request.user.is_authenticated:
+        #     return Response(
+        #         {"detail": "Authentication credentials were not provided."},
+        #         status=status.HTTP_401_UNAUTHORIZED,
+        #     )
+
+        # Get the user's profile (assuming OneToOne relationship)
+        try:
+            profile = request.user.profile
+        except AttributeError:
+            return Response(
+                {"detail": "Profile not found."}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        serializer = self.get_serializer(profile)
+        return Response(serializer.data)
 
 
 class AuthViewSets(InitialModelViewSet):
