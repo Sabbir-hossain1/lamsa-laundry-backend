@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from user.models import CustomUser
+from user.models import CustomUser, Profile
 from django.db import models
 
 
@@ -58,3 +58,9 @@ class CustomUserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ["phone_number", "is_active", "is_staff"]
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ["first_name", "last_name", "image"]
