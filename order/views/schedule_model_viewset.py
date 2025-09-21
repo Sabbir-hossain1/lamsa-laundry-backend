@@ -11,10 +11,16 @@ class ScheduleModelViewSet(ModelViewSet):
     queryset = Schedule.objects.all()
     permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        qs = Schedule.objects.all()
+        oderID = self.request.query_params.get("orderID")
+        if oderID:
+            qs.filter(order=oderID)
+        return qs
+    
+
     def get_serializer_class(self):
         if self.action == "create":
             return ScheduleModelCreateSerializer
         return ScheduleModelSerializer
 
-    def get_queryset(self):
-        return Schedule.objects.all()
